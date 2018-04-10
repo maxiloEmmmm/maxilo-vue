@@ -1,9 +1,10 @@
-./src/
-./public/
-./node_modules/
-./hot
-./index.html
-./mix-manifest.json
-./webpack.mix.js
+src/
+public/
+node_modules/
+hot
+index.html
+mix-manifest.json
+webpack.mix.js
 .gitattributes
 .DS_Store
+
