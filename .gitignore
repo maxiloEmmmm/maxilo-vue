@@ -1,6 +1,6 @@
-src/
-public/
-node_modules/
+src
+public
+node_modules
 hot
 index.html
 mix-manifest.json
