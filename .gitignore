@@ -5,3 +5,5 @@
 ./index.html
 ./mix-manifest.json
 ./webpack.mix.js
+.gitattributes
+.DS_Store
