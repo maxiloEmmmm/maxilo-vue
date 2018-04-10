@@ -1,0 +1,8 @@
+./src/
+./public/
+./mix-manifest.json
+./hot
+./index.html
+./webpack.mix.js
+./.babelrc
+./dist.sh

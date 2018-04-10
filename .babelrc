@@ -1,0 +1,13 @@
+{
+    "presets": [
+        "stage-2",
+        "env"
+    ],
+    "plugins": [
+        "transform-vue-jsx"
+    ],
+    "ignore": [
+        "./src/vendor/bd_upload/*.js",
+        "./src/vendor/h_plus/plugins/iCheck/*"
+    ]
+}

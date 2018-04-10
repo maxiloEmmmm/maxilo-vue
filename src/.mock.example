@@ -1,0 +1,7 @@
+// mock工具类
+import utils from 'maxilo-vue/dist/mocks/utils';
+// 导入后端API
+import { TEST } from './api/test';
+
+utils.core(utils.resolve(TEST.MOCK), 'post',  {status: 0}
+, '测试请求');
