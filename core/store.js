@@ -1,10 +1,12 @@
 import ls from './libs/localStorage';
 import Vuex from 'vuex';
+import isObject from 'lodash/isObject';
 const store = function (modules) {
     this.name = 'store';
     this.map = {};
     this.whitelist = [];
     this.modules = {};
+    this.instance = null;
 
 
     /* 一次性模块 */
@@ -29,13 +31,14 @@ const store = function (modules) {
         });
 
         vue.use(Vuex);
-        return new Vuex.Store({
+        this.instance = new Vuex.Store({
             modules: this.modules,
             strict: !this.app.config.debug,
             plugins: this.app.config.debug ? [
                 this.toLs(this.map, this.writeList)
             ] : [this.toLs(this.map, this.writeList)]
         });
+        return this.instance;
     };
 
     this.depModule = function (module, ds) {
@@ -48,12 +51,19 @@ const store = function (modules) {
         };
 
         if (ds) {
-            Object.keys(deps.state).forEach(k => deps.state[k] = this.app.utils._.merge(deps.state[k], ds[k] ? ds[k] : {}));
+            Object.keys(deps.state).forEach(k => {
+                //await to fixed Map、 Set and syblm 
+                if (isObject(deps.state[k]) || Array.isArray(deps.state[k])) {
+                    deps.state[k] = this.app.utils._.merge(deps.state[k], ds[k] !== undefined ? ds[k] : {})
+                }else {
+                    deps.state[k] = ds[k] ? ds[k] : '';
+                }
+            });
         }
 
         if (module.modules) {
             deps.modules = {};
-            Object.keys(module.modules).forEach(i => deps.modules[i] = this.depModule(module.modules[i], ds && ds[i] && ds[i] ? ds[i] : {}));
+            Object.keys(module.modules).forEach(i => deps.modules[i] = this.depModule(module.modules[i], ds && ds[i] !== undefined ? ds[i] : {}));
         }
         
         return deps;
@@ -95,7 +105,7 @@ const store = function (modules) {
         let tmp = this.app.utils._.isObject(map) ? Object.keys(map).filter(v => v != '_modules') : map;
         let d = Object.create(null);
         tmp.forEach(k => { 
-            d[k] = state[k] ? state[k] : {};
+            d[k] = state[k] !== undefined ? state[k] : {};
         });
 
         if(map._modules) {

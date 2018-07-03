@@ -4,10 +4,16 @@
         "env"
     ],
     "plugins": [
-        "transform-vue-jsx"
-    ],
-    "ignore": [
-        "./src/vendor/bd_upload/*.js",
-        "./src/vendor/h_plus/plugins/iCheck/*"
+        "transform-vue-jsx",
+        "transform-export-extensions",
+        [
+            "transform-runtime",
+            {
+                "helpers": false,
+                "polyfill": false,
+                "regenerator": true,
+                "moduleName": "babel-runtime"
+            }
+        ]
     ]
 }

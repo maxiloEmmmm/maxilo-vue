@@ -1,10 +1,10 @@
 import utils from '../utils';
 import Vue from 'vue';
 
-import { isObject } from 'lodash/isObject';
 export default function(){
     this.modules = {};
     this.targetComponent = false;
+    this.vueFactory = Vue;
 
     /* singleton */
     this.register = function(module){
