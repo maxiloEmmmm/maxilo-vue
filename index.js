@@ -1,6 +1,5 @@
-import "babel-polyfill";
 import maxiloVue from './core/libs/application';
-import utils from './core/utils';
+import utils from './core/utils/index.js';
 
 import router from './core/router';
 import store from './core/store';
@@ -15,8 +14,8 @@ let maxiloVueModule = new maxiloVue();
 try {
     maxiloVueModule.register(new config);
     maxiloVueModule.register(new utilsClass);
-    maxiloVueModule.register(new router);
     maxiloVueModule.register(new store);
+    maxiloVueModule.register(new router);
     maxiloVueModule.register(new i18n);
     maxiloVueModule.register(new validator);
     maxiloVueModule.register(new http);
@@ -25,4 +24,4 @@ try {
     utils.system.notice(error);
 }
 
-export default maxiloVueModule;
+module.exports = maxiloVueModule;

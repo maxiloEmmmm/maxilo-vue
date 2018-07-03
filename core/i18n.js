@@ -12,8 +12,20 @@ const i18n = function () {
 
     this.run = function (vue) {
         vue.use(VueI18n);
+
+        Object.defineProperty(vue.prototype, '$tts', {
+            get() {
+                return function (...tmp) {
+                    var len = tmp.length, msg = '';
+                    for (var i = 0; i < len; i++) {
+                        msg += Array.isArray(tmp[i]) ? this.$t(tmp[i][0], ...tmp[i].slice(1, -1)) : this.$t(tmp[i]);
+                    }
+                    return msg;
+                };
+            },
+        });
         return new VueI18n({
-            locale: this.locale == '' ? 'zh_cn' : this.locale,
+            locale: this.locale == '' ? this.app.config.locale : this.locale,
             messages: this.messages,
         });
     };

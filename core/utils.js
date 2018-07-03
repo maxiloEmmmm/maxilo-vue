@@ -13,7 +13,7 @@ const utils = function (modules) {
     });
 
     this.add = function (namespace, func) {
-        if (this.app.utils._.isString(namespace) || namespace == '') {
+        if (!this.app.utils._.isString(namespace) || namespace == '') {
             return ;
         }
 
@@ -27,12 +27,13 @@ const utils = function (modules) {
         
         if (tmp.length == 1 && !this.utilMap[tmp[0]]) {
             let k = tmp[0];
-            this.utilMap[k] = {};
+            this.utilMap[k] = func;
             Object.defineProperty(this, k, {
                 get: () => {
                     return this.utilMap[k];
                 }
             });
+            return ;
         }
         this.depNameSpace(this.utilMap, tmp, func);
     };
@@ -50,6 +51,9 @@ const utils = function (modules) {
         if (len === 1) {
             target[space[0]] = func;
         }else {
+            if (!target[space[0]]) {
+                target[space[0]] = {};
+            }
             this.depNameSpace(target[space[0]], this.app.utils._.slice(space, 1, len), func);
         }
     };

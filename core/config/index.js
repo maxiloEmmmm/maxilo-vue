@@ -1,14 +1,11 @@
-const storeKey = 'aVqsCo0US9hnP6W';
-
+import utils from '../utils/index.js'; 
 const config = function(){
     this.name = 'config';
     this.cs = {
-        storeKey,
-        debug: process.env.DEBUG ? true : false,
-        lang: 'zh_cn',
-        systemKey: 'platform',
-        systemList: ['platform'],
-        baseUrl: process.env.SERVER ? ('http://' + process.env.SERVER) : 'http://localhost:13133',
+        debug: utils.base.env(process.env.DEBUG, true),
+        locale: utils.base.env(process.env.LANG, 'zh_cn'),
+        baseURL: utils.base.env(process.env.SERVER, 'server'),
+        storeKey: 'fuf8u18uhf1huif13uhif2'
     };
 
     Object.keys(this.cs).forEach(v => {
@@ -21,6 +18,31 @@ const config = function(){
             }
         });
     });
+
+    this.add = function(key, v){
+        if(this.cs[key] === undefined) {
+            Object.defineProperty(this, key, {
+                get() {
+                    return v;
+                },
+                set(val) {
+                    this.cs[key] = v;
+                }
+            });
+        }
+        
+        this.cs[key] = v;
+    };
+
+    this.merge = function(obj){
+        Object.keys(obj).forEach((v) => {
+            if (!this.cs[v]) {
+                this.add(v, obj[v]);
+            }else {
+                this.cs[v] = obj[v];
+            }
+        });
+    };
 
     this.run = function(vue){
         Object.defineProperty(vue.prototype, '$configs', {
