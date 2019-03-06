@@ -11,7 +11,7 @@ export default {
             return false;
         }else if(type === 'Object'){
             return Object.keys(v).length === 0;
-        }else if (type === 'Set' || type === 'Map'){
+        }else if (type === 'Set' || type === ' '){
             return v.size === 0;
         }else if(type === 'Array') {
             return v.length === 0;

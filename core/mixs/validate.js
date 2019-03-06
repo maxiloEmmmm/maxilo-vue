@@ -6,11 +6,11 @@ export default {
             let len = child.length;
             let result = true;
             for (let i = 0; i < len; i++) {
-                if (keys.findIndex(q => q._uid == child[i]._uid) != -1 || child[i].$validator === undefined) {
+                if (keys.findIndex(q => q._uid == child[i]._uid) != -1) {
                     continue;
                 }
 
-                let sr = await child[i].$validator.validateAll();
+                let sr = child[i].$validator === undefined ? true : await child[i].$validator.validateAll();
                 if (sr) {
                     if (child[i].$children.length != 0) {
                         if (!await this.areaValidate(null, keys, child[i].$children)) {
@@ -28,7 +28,9 @@ export default {
 
             let len = child.length;
             for (let i = 0; i < len; i++) {
-                await child[i].$validator.reset();
+                if (child[i].$validator !== undefined) {
+                    await child[i].$validator.reset();
+                }
                 if (child[i].$children.length != 0) {
                     await this.clearTipValidate(null, child[i].$children);
                 }

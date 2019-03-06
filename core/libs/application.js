@@ -1,10 +1,11 @@
-import utils from '../utils';
+import utils from '../utils/index.js';
 import Vue from 'vue';
 
 export default function(){
     this.modules = {};
     this.targetComponent = false;
     this.vueFactory = Vue;
+    this.instance = null;
 
     /* singleton */
     this.register = function(module){
@@ -27,11 +28,15 @@ export default function(){
         });
     };
 
-    this.run = function (){        
+    this.run = async function (){        
         let moduleInstance = {};
-        Object.keys(this.modules).map(v => moduleInstance[v] = this.modules[v].run(Vue));
+        let moduleKey = Object.keys(this.modules);
+        let moduleKeyLen = moduleKey.length;
+        for(let i = 0; i < moduleKeyLen; i++) {
+            moduleInstance[moduleKey[i]] = await this.modules[moduleKey[i]].run(Vue)
+        }
         
-        let app = new Vue({
+        this.instance = new Vue({
             ...moduleInstance,
             render: this.targetComponent ? h => h(this.targetComponent) : h => h('div', [
                 h('router-view')

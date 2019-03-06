@@ -24,13 +24,13 @@ const vue = function () {
 
     this.depComponent = function(mix) {
         if (this.app.utils.base.getType(mix) == 'Object') {
-            if (mix.__file || mix._compiled || mix.functional) {
+            if (mix.__file || mix._compiled || mix.functional || mix._scopeId) {
                 this.component(mix.name, mix);
                 return ;
             }
             Object.keys(mix).forEach(i => {
                 if (this.app.utils.base.getType(mix[i]) == 'Object') {
-                    if (mix[i].__file || mix[i]._compiled || mix[i].functional) {
+                    if (mix[i].__file || mix[i]._compiled || mix[i].functional || mix[i]._scopeId) {
                         this.component(i, mix[i]);
                     } else {
                         this.depComponent(mix[i]);
@@ -49,7 +49,7 @@ const vue = function () {
     };
 
     this.run = function (vue) {
-        this.instance = vue;
+        this.instance = vue; 
         
         if (this.app.config.debug && this.errorHandler) {
             vue.config.errorHandler = this.errorHandler;

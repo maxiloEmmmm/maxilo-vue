@@ -1,4 +1,4 @@
-import Mock from './mock'
+import Mock from './mock.js';
 import cloneDeep from 'lodash/cloneDeep';
 
 const mockService = function(){
@@ -8,18 +8,18 @@ const mockService = function(){
 	this.urls = [];
 	this.host = '';
 	
-	this.resolve = function (url, build, type = 'get', title = '这是什么呢'){
+	this.resolve = function (url, build, type = 'get', title = '这是什么呢', reg = false){
 		this.urls.push({
 			url,
 			build,
 			type,
-			title
+			title,
+			reg
 		});
 	};
 
 	this.resolveREG = function (url, res, type = 'get', title = '这是什么呢') {
-		/* 'reg:' for rap service. */
-		this.resolve('reg:' + url, res, type, title);
+		this.resolve(url, res, type, title, true);
 	};
 
 	this.resolveHelper = {
@@ -79,7 +79,10 @@ const mockService = function(){
 
 		modules.forEach(v => {
 			v.interfaces.forEach($v => {
-				this.resolve($v.url, depPropertie($v.properties.filter(v => v.scope == 'response')), $v.method, '[' + v.name + ' - ' + $v.name + ']');
+				this.resolve(
+					/^reg:/.test($v.url) 
+					? $v.url.match(new RegExp('^reg:(.*?)$'))[1] 
+					: $v.url, depPropertie($v.properties.filter(v => v.scope == 'response')), $v.method, '[' + v.name + ' - ' + $v.name + ']');
 			});
 		});
 	};
@@ -88,10 +91,13 @@ const mockService = function(){
 		let host = /\/$/.test(this.host) ? this.host.slice(0, -1) : this.host;
 		this.urls.forEach(v => {
 			let url = v.url;
-			if(/^reg:/.test(v.url)) {
-				url = v.url.match(new RegExp('^reg:(.*?)$'))[1];
-			}
-			this.mock(new RegExp(host + (/^\//.test(url) ? '' : '/') + url + '(\\?.*?)?$', 'g'), v.type.toLowerCase(), v.build, v.title);
+			let hasEnd = /^\//.test(url) || /\/$/.test(host);
+			let type = v.type.toLowerCase();
+			url = host + (hasEnd ? '' : '/') + url;
+			this.mock(v.reg 
+				? new RegExp(url + '(\\?.*?)?$', 'g')
+				: url, 
+				type, v.build, v.title);
 		});
 	};
 

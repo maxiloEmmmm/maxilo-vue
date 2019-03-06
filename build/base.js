@@ -50,7 +50,13 @@ const configs = {
                 test: /\.(jpe?g|png|gif|svg)$/,
                 loader: 'image-webpack-loader',
                 enforce: 'pre',
-            },]
+            }, {
+                // Or /ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/ if you want to limit this loader
+                // to CKEditor 5 icons only.
+                test: /\.svg$/,
+
+                use: ['raw-loader']
+            }]
     },
     plugins: [
         //remove moment locale, because don.t use
@@ -69,7 +75,8 @@ if (!process.argv.includes('--hot')) {
     });
 } else {
     configs.devServer = {
-        host: '0.0.0.0'
+        host: '0.0.0.0',
+        disableHostCheck: true
     };
     configs.output.path = '/';
     mix.setPublicPath('/');

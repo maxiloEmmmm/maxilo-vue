@@ -9,8 +9,9 @@ import http from './core/http';
 import config from './core/config';
 import utilsClass from './core/utils.js';
 import vue from './core/vue';
+import alert from './core/alert';
 
-let maxiloVueModule = new maxiloVue();
+const maxiloVueModule = new maxiloVue();
 try {
     maxiloVueModule.register(new config);
     maxiloVueModule.register(new utilsClass);
@@ -19,9 +20,12 @@ try {
     maxiloVueModule.register(new i18n);
     maxiloVueModule.register(new validator);
     maxiloVueModule.register(new http);
+    maxiloVueModule.register(new alert);
     maxiloVueModule.register(new vue);
 } catch (error) {
     utils.system.notice(error);
 }
 
-module.exports = maxiloVueModule;
+export default (function(){
+    return maxiloVueModule;
+})();
