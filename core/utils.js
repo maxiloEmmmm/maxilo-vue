@@ -1,8 +1,25 @@
 import utilsLib from './utils/';
 
 const utils = function (modules) {
+    this.depBind = function(hi){
+        let tmp = {}
+        Object.keys(hi).forEach(v => {
+            if (utilsLib.base.getType(hi[v]) == 'Object') {
+                this.depBind(hi[v]);
+            }else {
+                tmp[v] = function(){
+                    return hi[v].call(this, ...arguments);
+                }.bind(this);
+            }
+        });
+        return tmp;
+    }
+
+    utilsLib.diy.alert = this.depBind(utilsLib.diy.alert);
+    utilsLib.async = this.depBind(utilsLib.async);
+
     this.name = 'utils';
-    this.utilMap = { ...utilsLib};
+    this.utilMap = utilsLib
 
     Object.keys(this.utilMap).forEach(v => {
         Object.defineProperty(this, v, {
@@ -12,7 +29,7 @@ const utils = function (modules) {
         });
     });
 
-    this.add = function (namespace, func) {
+    this.add = function (namespace, func, bind = false) {
         if (!this.app.utils._.isString(namespace) || namespace == '') {
             return ;
         }
@@ -30,12 +47,14 @@ const utils = function (modules) {
             this.utilMap[k] = func;
             Object.defineProperty(this, k, {
                 get: () => {
-                    return this.utilMap[k];
+                    return bind ? function () {
+                        return this.utilMap[k].call(this, ...arguments);
+                    }.bind(this) : this.utilMap[k];
                 }
             });
             return ;
         }
-        this.depNameSpace(this.utilMap, tmp, func);
+        this.depNameSpace(this.utilMap, tmp, func, bind);
     };
 
     this.run = function (vue) {
@@ -46,15 +65,17 @@ const utils = function (modules) {
         });
     };
 
-    this.depNameSpace = function(target, space, func){
+    this.depNameSpace = function(target, space, func, bind = false){
         let len = space.length;
         if (len === 1) {
-            target[space[0]] = func;
+            target[space[0]] = bind ? function() {
+                return func.call(this, ...arguments);
+            }.bind(this) : func;
         }else {
             if (!target[space[0]]) {
                 target[space[0]] = {};
             }
-            this.depNameSpace(target[space[0]], this.app.utils._.slice(space, 1, len), func);
+            this.depNameSpace(target[space[0]], this.app.utils._.slice(space, 1, len), func, bind);
         }
     };
 };

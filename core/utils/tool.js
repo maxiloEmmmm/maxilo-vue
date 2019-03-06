@@ -81,6 +81,13 @@ let slotDeepClone = (vnodes, createElement) => {
     return clonedVNodes;
 };
 
+let getSlot = function(target, i, clone = false){
+    if (target === undefined || !Array.isArray(target)) { return '' }
+    let s = target.filter(v => v.tag)[i];
+    if (!s) { return ''; }
+    return clone ? slotDeepClone([s], clone)[0] : s;
+};
+
 import md5 from 'blueimp-md5';
 
 let getBroswer = function() {
@@ -112,5 +119,6 @@ export default {
     stopPropagation,
     slotDeepClone,
     md5,
-    getBroswer
+    getBroswer,
+    getSlot
 }

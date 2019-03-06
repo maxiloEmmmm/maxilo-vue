@@ -8,12 +8,15 @@ export default {
                 if (child[i].reset) {
                     await child[i].reset();
                 }
-                child[i].$validator.reset();
+                if (child[i].$validator !== undefined) {
+                    child[i].$validator.reset();
+                }
 
                 if (child[i].$children.length != 0) {
                     this.resetComponent(null, child[i].$children);
                 }
             }
+            await this.$nextTick();
         }
     }
 }

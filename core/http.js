@@ -25,6 +25,7 @@ const http = function(){
     };
 
     this.baseInit = function(){
+        let _this = this;
         if(this.baseURL === null) {
             this.baseURL = this.app.config.baseURL;
         }
@@ -32,9 +33,19 @@ const http = function(){
             baseURL: this.baseURL
         });
 
+        ['get', 'post'].forEach(p => {
+            let tmp = this.instance[p];
+            this.instance[p] = async function() {
+                let response = await tmp(...arguments);
+                if (_this.adapter.dataAdapter) {
+                    response = _this.adapter.dataAdapter(response);
+                }
+                return response;
+            }
+        });
+
         window.initManager = {};
 
-        let _this = this;
         this.instance.wPost = async function () {
             let param = arguments[2] ? arguments[2] : { time: null, target: null, style: 1 };
             param.style = 2;
@@ -114,7 +125,8 @@ const http = function(){
             };
 
             this.method = method;
-            if (!/^http/.test(url)) {
+            //todo fix webpack hot update use relative path dont need to repair, ps: write list. 
+            if (!/^http/.test(url) && !/hot-update\.json$/.test(url)) {
                 url = _this.baseURL + url;
             }
             let nativeURL = _this.app.utils.tool.parseURL(url);
@@ -172,15 +184,15 @@ const http = function(){
 
     this.responseException = function(e){
         this.adapter.responseErrorException ? 
-            this.adapter.responseErrorException(e) : console.log(e);
+            this.adapter.responseErrorException(e) : '';
     }
 
     this.requestFilter = function(a){
-        this.adapter.beforeRequest ? this.adapter.beforeRequest(a) : console.log(a);
+        this.adapter.beforeRequest ? this.adapter.beforeRequest(a) : '';
     }
 
     this.responseFilter = function(a){
-        this.adapter.afterResponse ? this.adapter.afterResponse(a) : console.log(a);
+        this.adapter.afterResponse ? this.adapter.afterResponse(a) : '';
     }
 };
 
