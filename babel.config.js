@@ -9,7 +9,7 @@ module.exports = {
     }]
   ],
   plugins: [["@babel/plugin-transform-runtime", {
-    "regenerator": true
+    "regenerator": false
   }]],
   exclude: [
     "./core/mocks/mock.js",
