@@ -28,7 +28,7 @@ export default {
             let filter = this.modeOmit[mode] !== undefined ? this.modeOmit[mode] : [];
             let attrs = this.attribute.filter(v => filter.indexOf(v) === -1);
             attrs.forEach(v => {
-                this.vueInstance.$set(this.vueInstance[fieldsKey], v, data[v] !== undefined ? data[v] : '');
+                this.vueInstance.$set(this.vueInstance[fieldsKey], v, data.hasOwnProperty(v) ? data[v] : '');
             });
             await this.vueInstance.$nextTick();
 
