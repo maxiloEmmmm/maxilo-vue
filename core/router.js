@@ -4,7 +4,7 @@ const router = function () {
     this.name = 'router';
     this.instance = null;
     this.middleware = new middleware;
-    this.mode = 'history'
+    this.mode = 'hash'
 
     this.getRoute = function () {
         if(!this.instance) {
@@ -22,7 +22,8 @@ const router = function () {
         vue.use(VueRouter);
         let r = new VueRouter({
             mode: this.mode,
-            base: __dirname,
+            // base: __dirname,
+            //todo
             linkActiveClass: 'active',
             routes: this.instance ? this.instance.routes : []
         });
