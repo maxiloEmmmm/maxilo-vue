@@ -1,16 +1,10 @@
 {
   "name": "maxilo-vue",
-  "version": "1.2.100",
+  "version": "2.0.0",
   "description": "maxilo web framework.",
-  "main": "lib/index.js",
+  "main": "bundle.js",
   "scripts": {
-    "analyzer": "cross-env NODE_ENV=production_analyzer node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "watch": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "watch-poll": "npm run watch -- --watch-poll",
-    "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --color --compress --progress --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "prod": "npm run production",
-    "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "build": "babel index.js -o lib/index.js && babel core -d lib/core"
+    "build": "rollup -c"
   },
   "keywords": [
     "vue",
@@ -21,21 +15,27 @@
   "devDependencies": {
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+    "@babel/plugin-transform-flow-strip-types": "^7.8.3",
     "@babel/plugin-transform-runtime": "^7.1.0",
-    "@babel/preset-env": "^7.1.0"
-  },
-  "dependencies": {
+    "@babel/preset-env": "^7.1.0",
+    "@babel/runtime-corejs3": "^7.4.5",
+    "@rollup/plugin-commonjs": "^11.0.2",
     "axios": "^0.18.0",
+    "babel-plugin-syntax-jsx": "^6.18.0",
+    "babel-plugin-transform-vue-jsx": "^3.7.0",
     "blueimp-md5": "^2.10.0",
-    "lodash": "^4.17.5",
-    "moment": "^2.22.2",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-flow-no-whitespace": "^1.0.0",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-uglify": "^6.0.4",
     "vee-validate": "^2.0.5",
     "vue": "^2.5.16",
     "vue-i18n": "^7.6.0",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1",
-    "@babel/runtime-corejs3": "^7.4.5"
+    "vuex": "^3.0.1"
   },
   "_from": "maxilo-vue@1.0.5",
   "_resolved": "http://registry.npm.taobao.org/maxilo-vue/download/maxilo-vue-1.0.5.tgz"

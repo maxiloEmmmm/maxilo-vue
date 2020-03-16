@@ -88,8 +88,6 @@ let getSlot = function(target, i, clone = false){
     return clone ? slotDeepClone([s], clone)[0] : s;
 };
 
-import md5 from 'blueimp-md5';
-
 let getBroswer = function() {
     var sys = {};
     var ua = navigator.userAgent.toLowerCase();
@@ -118,7 +116,6 @@ export default {
     random,
     stopPropagation,
     slotDeepClone,
-    md5,
     getBroswer,
     getSlot
 }

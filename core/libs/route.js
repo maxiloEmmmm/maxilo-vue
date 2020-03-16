@@ -1,4 +1,4 @@
-import isString from 'lodash/isString';
+import utils from '../utils/index.js';
 export const route = function(){
     this.routes = [];
 
@@ -49,7 +49,7 @@ export const route = function(){
 
     this.middleware = (ms) => {
         this.middlewares = [];
-        if(isString(ms)) {
+        if(utils._.isString(ms)) {
             ms = [ms];
         }
 
@@ -59,7 +59,7 @@ export const route = function(){
 
     this.middlewareGroup = (ms, rs) => {
         this.mgroup = true;
-        if(isString(ms)) {
+        if(utils._.isString(ms)) {
             ms = [ms];
         }
         let r = rs();
@@ -73,7 +73,7 @@ export const route = function(){
     this.addMiddleware = (ms) => {
         if(this.currentIndex == 0) {return; }
 
-        if(isString(ms)) {
+        if(utils._.isString(ms)) {
             ms = [ms];
         }
 
