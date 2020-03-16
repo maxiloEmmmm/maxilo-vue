@@ -8,6 +8,6 @@ export default {
         if (ds === undefined || ds === '') {
             return d;
         }
-        return process.env.VUE_APP_DEBUG ? ds : d;
+        return true ? ds : d;
     }
 }
