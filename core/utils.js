@@ -75,7 +75,7 @@ const utils = function (modules) {
             if (!target[space[0]]) {
                 target[space[0]] = {};
             }
-            this.depNameSpace(target[space[0]], this.app.utils._.slice(space, 1, len), func, bind);
+            this.depNameSpace(target[space[0]], space.slice(1, len), func, bind);
         }
     };
 };
