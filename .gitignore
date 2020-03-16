@@ -1,9 +1,4 @@
-src
-public
-node_modules
-hot
-mix-manifest.json
-webpack.mix.js
-.gitattributes
+/node_modules
 .DS_Store
+.vscode
 

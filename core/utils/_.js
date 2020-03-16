@@ -1,8 +1,4 @@
-
-
-
 import base from './base'
-
 
 export default {
     isArray: Array.isArray,

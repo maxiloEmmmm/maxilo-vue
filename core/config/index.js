@@ -2,9 +2,6 @@ import utils from '../utils/index.js';
 const config = function(){
     this.name = 'config';
     this.cs = {
-        // debug: utils.base.env(process.env.VUE_APP_DEBUG, true),
-        // locale: utils.base.env(process.env.VUE_APP_LANG, 'zh_cn'),
-        // baseURL: utils.base.env(process.env.VUE_APP_SERVER, 'server'),
         debug: true,
         locale: 'zh_cn',
         baseURL: 'server',

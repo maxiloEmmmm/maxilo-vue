@@ -22,8 +22,6 @@ const router = function () {
         vue.use(VueRouter);
         let r = new VueRouter({
             mode: this.mode,
-            // base: __dirname,
-            //todo
             linkActiveClass: 'active',
             routes: this.instance ? this.instance.routes : []
         });
