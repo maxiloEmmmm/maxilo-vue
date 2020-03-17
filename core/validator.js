@@ -1,4 +1,4 @@
-import VeeValidate, { Validator } from 'vee-validate';
+import VeeValidate, {Validator} from 'vee-validate';
 import validateMix from './mixs/validate';
 
 const validator = function () {
@@ -53,7 +53,11 @@ const validator = function () {
             name: k,
             messages: this.messages[k]
         }));
-        Validator.localize(this.app.config.locale);
+
+        let localize = VeeValidate.Validator 
+            ? Validator.localize
+            : VeeValidate.localize
+        localize(this.app.config.locale)
         vue.use(VeeValidate);
         vue.mixin(validateMix);
     };

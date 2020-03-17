@@ -6,13 +6,25 @@ import babel from 'rollup-plugin-babel';
 import {uglify} from 'rollup-plugin-uglify';
 import replace from 'rollup-plugin-replace';
 
+const ext = ['vee-validate', 'vue', 'vue-i18n', 'vue-router', 'vuex', 'axios']
+const out_ext = ['vue', 'vue-i18n', 'vue-router', 'vuex']
 export default {
-    input: 'index.js',
+    input: {
+        normal: 'index.js',
+        out: 'index-without-lib.js'
+    }[process.env.OUT ? 'out' : 'normal'],
     output: {
-        file: 'bundle.js',
+        file: {
+            full: `dist/maxilo-vue${process.env.OUT ? '-out' : ''}.min.js`,
+            runtime: `dist/main${process.env.OUT ? '-out' : ''}.min.js`
+        }[process.env.TARGET],
         format: 'umd',
         name: 'maxiloVue',
     },
+    external: {
+        full: [],
+        runtime: process.env.OUT ? out_ext : ext
+    }[process.env.TARGET],
     plugins: [flow(), json(), resolve({
         browser: true,
         // mainFields: ['main, jsnext']
