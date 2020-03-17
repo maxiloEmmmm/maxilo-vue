@@ -2,9 +2,12 @@
   "name": "maxilo-vue",
   "version": "2.0.0",
   "description": "maxilo web framework.",
-  "main": "bundle.js",
+  "main": "dist/main.min.js",
   "scripts": {
-    "build": "rollup -c"
+    "build-full": "rollup -c --environment TARGET:full",
+    "build": "rollup -c --environment TARGET:runtime",
+    "build-out-full": "rollup -c --environment TARGET:full --environment OUT:1",
+    "build-out": "rollup -c --environment TARGET:runtime --environment OUT:1"
   },
   "keywords": [
     "vue",
@@ -22,21 +25,22 @@
     "@babel/preset-env": "^7.1.0",
     "@babel/runtime-corejs3": "^7.4.5",
     "@rollup/plugin-commonjs": "^11.0.2",
-    "axios": "^0.18.0",
     "babel-plugin-syntax-jsx": "^6.18.0",
     "babel-plugin-transform-vue-jsx": "^3.7.0",
-    "blueimp-md5": "^2.10.0",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-flow-no-whitespace": "^1.0.0",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-replace": "^2.2.0",
-    "rollup-plugin-uglify": "^6.0.4",
+    "rollup-plugin-uglify": "^6.0.4"
+  },
+  "dependencies": {
     "vee-validate": "^2.0.5",
     "vue": "^2.5.16",
     "vue-i18n": "^7.6.0",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "axios": "^0.18.0"
   },
   "_from": "maxilo-vue@1.0.5",
   "_resolved": "http://registry.npm.taobao.org/maxilo-vue/download/maxilo-vue-1.0.5.tgz"
