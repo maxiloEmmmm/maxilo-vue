@@ -22,7 +22,7 @@ const alert = function () {
 
     this.getMsg = function(options){
         if(options === undefined) {return '';}
-        return utils.getType(options) === 'String'
+        return this.app.utils.base.getType(options) === 'String'
             ? options
             : options.text
                 ? options.text

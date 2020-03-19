@@ -1,13 +1,14 @@
 {
   "name": "maxilo-vue",
-  "version": "2.0.2",
+  "version": "2.0.4",
   "description": "maxilo web framework.",
   "main": "dist/main.min.js",
   "scripts": {
     "build-full": "rollup -c --environment TARGET:full",
     "build": "rollup -c --environment TARGET:runtime",
     "build-out-full": "rollup -c --environment TARGET:full --environment OUT:1",
-    "build-out": "rollup -c --environment TARGET:runtime --environment OUT:1"
+    "build-out": "rollup -c --environment TARGET:runtime --environment OUT:1",
+    "build-all": "npm run build && npm run build-full && npm run build-out && npm run build-out-full"
   },
   "keywords": [
     "vue",
