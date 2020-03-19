@@ -1,4 +1,4 @@
-import utilsLib from './utils/';
+import utilsLib from './utils/index.js';
 
 const utils = function (modules) {
     this.depBind = function(hi){

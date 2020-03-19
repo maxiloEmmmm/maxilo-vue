@@ -1,6 +1,5 @@
 import ls from './libs/localStorage';
 import Vuex from 'vuex';
-import utils from './utils';
 const store = function (modules) {
     this.name = 'store';
     this.map = {};
@@ -53,7 +52,7 @@ const store = function (modules) {
         if (ds) {
             Object.keys(deps.state).forEach(k => {
                 //await to fixed Map、 Set and syblm 
-                if (utils._.isObject(deps.state[k]) || Array.isArray(deps.state[k])) {
+                if (this.app.utils._.isObject(deps.state[k]) || Array.isArray(deps.state[k])) {
                     deps.state[k] = this.app.utils._.merge(deps.state[k], ds[k] !== undefined ? ds[k] : {})
                 }else {
                     deps.state[k] = ds[k] ? ds[k] : '';
@@ -102,7 +101,7 @@ const store = function (modules) {
             return state;
         }
 
-        let tmp = this.app.utils._.utils._.isObject(map) ? Object.keys(map).filter(v => v != '_modules') : map;
+        let tmp = this.app.utils._.isObject(map) ? Object.keys(map).filter(v => v != '_modules') : map;
         let d = Object.create(null);
         tmp.forEach(k => { 
             d[k] = state[k] !== undefined ? state[k] : {};
