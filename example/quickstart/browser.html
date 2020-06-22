@@ -18,12 +18,12 @@
     <script src="https://cdn.bootcss.com/vee-validate/3.2.5/vee-validate.min.js"></script>
     <script src="../../dist/main.min.js"></script>
     <script>
-        maxiloVue.vue.component('hi', {
+        maxiloVue.make("vue").component('hi', {
             render: function (h) {
                 return h('p', 'Quick start')
             }
         })
-        maxiloVue.router.getRoute().add('/', {
+        maxiloVue.make("router").getRoute().add('/', {
             render: function (h) {
                 return h('div', [h('span', 'Hi'), h('hi')])
             }
