@@ -1,44 +1,52 @@
 import utils from '../utils/index.js';
 import Vue from 'vue';
+import ServiceProvider from "./serviceProvider"
 
 export default function(){
     this.modules = {};
-    this.targetComponent = false;
-    this.vueFactory = Vue;
-    this.instance = null;
+    this.binds = {};
+    this.target = false;
+    this.vue = Vue;
+    this.app = null;
+    this.sp = new ServiceProvider(this)
+    this.hooks = {}
 
-    /* singleton */
-    this.register = function(module){
-        let name = '';
-        if(!module.name) {
-            utils.system.notice('[maxilo-vue] module name is not define, will use object prototype constructor name.');
-            name = module.constructor.name;
-        }else {name = module.name;}
+    this.addHook = function(name, hook) {
+        this.hooks[name] = hook
+    }
 
-        if (this.modules.hasOwnProperty(name)) {
-            utils.system.notice('[maxilo-vue warning] module - ' + name + ' is already exist, will replace old.');
+    this.register = function(provider){
+        this.sp.register(provider)
+    }
+
+    this.one = function(name, params = {}){
+        return this.binds[name](this, params)
+    }
+
+    this.make = function(name, params = {}) {
+        if(this.modules[name] === undefined) {
+            this.modules[name] = this.binds[name](this, params)
         }
 
-        module.app = this;
-        this.modules[name] = module;
-        Object.defineProperty(this, name, {
-            get(){
-                return this.modules[name];
-            }
-        });
+        return this.modules[name]
+    }
+
+    this.bind = function(name, module){
+        this.binds[name] = module
     };
 
     this.run = async function (){        
-        let moduleInstance = {};
-        let moduleKey = Object.keys(this.modules);
-        let moduleKeyLen = moduleKey.length;
-        for(let i = 0; i < moduleKeyLen; i++) {
-            moduleInstance[moduleKey[i]] = await this.modules[moduleKey[i]].run(Vue)
-        }
+        await this.sp.boot()
+
+        Object.defineProperty(this.vue.prototype, '$app', {
+            get: () => {
+                return this;
+            }
+        });
         
-        this.instance = new Vue({
-            ...moduleInstance,
-            render: this.targetComponent ? h => h(this.targetComponent) : h => h('div', [
+        this.app = new this.vue({
+            ...this.hooks,
+            render: this.target ? h => h(this.target) : h => h('div', [
                 h('router-view')
             ])
         }).$mount('#app');

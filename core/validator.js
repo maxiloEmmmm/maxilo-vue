@@ -1,6 +1,5 @@
 import VeeValidate, {Validator} from 'vee-validate';
-import validateMix from './mixs/validate';
-
+import utils from "./utils/index"
 const validator = function () {
     this.name = 'validator';
     this.locale = 'en';
@@ -26,11 +25,11 @@ const validator = function () {
     };
 
     this.addRules = function (rs) {
-        if (this.app.utils.base.getType(rs) == 'Object') {
+        if (utils.tool.getType(rs) == 'Object') {
             Object.keys(rs).forEach(i => {
                 this.addRuke(i, rs[i]);
             });
-        } else if (this.app.utils.base.getType(mix) == 'Array') {
+        } else if (utils.tool.getType(mix) == 'Array') {
             rs.forEach(v => {
                 if(v.ruleKey && v,ruleBuild) {
                     this.addRule(v.ruleKey, v.ruleBuild);
@@ -44,10 +43,10 @@ const validator = function () {
     };
 
     this.addLocalizes = function(ls){
-        this.messages = this.app.utils._.merge(this.messages, ls);
+        this.messages = utils.tool.merge(this.messages, ls);
     };
 
-    this.run = function (vue) {
+    this.run = function (app) {
         Object.keys(this.rules).forEach(k => Validator.extend(k, this.rules[k]));
         Object.keys(this.messages).forEach(k => Validator.localize(k, {
             name: k,
@@ -57,9 +56,8 @@ const validator = function () {
         let localize = VeeValidate.Validator 
             ? Validator.localize
             : VeeValidate.localize
-        localize(this.app.config.locale)
-        vue.use(VeeValidate);
-        vue.mixin(validateMix);
+        localize(app.make("config").locale)
+        app.vue.use(VeeValidate);
     };
 };
 export default validator;

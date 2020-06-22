@@ -1,4 +1,4 @@
-import componentMix from './mixs/component';
+import utils from "./utils/index"
 const vue = function () {
     this.name = 'vue';
 
@@ -13,8 +13,8 @@ const vue = function () {
     this.warnHandler = false;
 
     this.component = function (name, component) {
-        if (!this.app.utils._.isString(name) || name == '') {
-            if (this.app.utils.base.getType(name) == 'Object' && name.name) {
+        if (!utils.tool.isString(name) || name == '') {
+            if (utils.tool.getType(name) == 'Object' && name.name) {
                 name = name.name;
             }else {return ;}
         }
@@ -23,23 +23,23 @@ const vue = function () {
     };
 
     this.depComponent = function(mix) {
-        if (this.app.utils.base.getType(mix) == 'Object') {
+        if (utils.tool.getType(mix) == 'Object') {
             if (mix.__file || mix._compiled || mix.functional || mix._scopeId) {
                 this.component(mix.name, mix);
                 return ;
             }
             Object.keys(mix).forEach(i => {
-                if (this.app.utils.base.getType(mix[i]) == 'Object') {
+                if (utils.tool.getType(mix[i]) == 'Object') {
                     if (mix[i].__file || mix[i]._compiled || mix[i].functional || mix[i]._scopeId) {
                         this.component(i, mix[i]);
                     } else {
                         this.depComponent(mix[i]);
                     }
-                } else if (this.app.utils.base.getType(mix[i]) == 'Array'){
+                } else if (utils.tool.getType(mix[i]) == 'Array'){
                     this.depComponent(mix[i]);
                 }
             });
-        } else if (this.app.utils.base.getType(mix) == 'Array') {
+        } else if (utils.tool.getType(mix) == 'Array') {
             mix.forEach(v => this.depComponent(v));
         }
     };
@@ -48,24 +48,23 @@ const vue = function () {
         this.uses.push([t, param]);
     };
 
-    this.run = function (vue) {
-        this.instance = vue; 
+    this.run = function (vuep, debug) {
+        this.instance = vuep; 
         
-        if (this.app.config.debug && this.errorHandler) {
-            vue.config.errorHandler = this.errorHandler;
+        if (debug && this.errorHandler) {
+            vuep.config.errorHandler = this.errorHandler;
         }
 
-        if (this.app.config.debug && this.warnHandler) {
-            vue.config.warnHandler = this.warnHandler;
+        if (debug && this.warnHandler) {
+            vuep.config.warnHandler = this.warnHandler;
         }
 
-        vue.config.performance = this.app.config.debug;
+        vuep.config.performance = debug;
 
-        vue.config.devtools = this.app.config.debug;
+        vuep.config.devtools = debug;
 
-        Object.keys(this.components).forEach(i => vue.component(i, this.components[i]));
-        this.uses.forEach(v => vue.use(v[0], v[1]));
-        vue.mixin(componentMix);
+        Object.keys(this.components).forEach(i => vuep.component(i, this.components[i]));
+        this.uses.forEach(v => vuep.use(v[0], v[1]));
     };
 };
 export default vue;

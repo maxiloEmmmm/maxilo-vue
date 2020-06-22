@@ -1,10 +1,10 @@
-import base from './base';
+import tool from './tool';
 export default {
     isNotEmpty(v){
         return !this.isEmpty(v);
     },
     isEmpty(v){
-        let type = base.getType(v);
+        let type = tool.getType(v);
         if (type === 'Number' || type === 'Function' || type === 'Boolean') {
             return false;
         }else if(type === 'String' && v.length != 0) {
