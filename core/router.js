@@ -1,7 +1,7 @@
 import routeLib from './libs/route';
-import VueRouter from 'vue-router';
+import VueRouter from 'vue-router'
+import utils from "./utils/"
 const router = function () {
-    this.name = 'router';
     this.instance = null;
     this.middleware = new middleware;
     this.mode = 'hash'
@@ -18,8 +18,7 @@ const router = function () {
         return this.instance.routes;
     };
 
-    this.run = function(vue){
-        vue.use(VueRouter);
+    this.run = function(){
         let r = new VueRouter({
             mode: this.mode,
             linkActiveClass: 'active',
@@ -28,7 +27,7 @@ const router = function () {
 
         r.beforeEach(async (to, from, next) => {
             let globalMs = this.middleware.globalItems;
-            let ms = this.app.utils._.merge({}, globalMs, this.middleware.items);
+            let ms = utils.tool.bind({}, globalMs, this.middleware.items);
             let toMiddle = [...Object.keys(globalMs)];
             to.matched.forEach((v) => {
                 if (v.meta.middlewares && v.meta.middlewares != 0) {
@@ -43,7 +42,7 @@ const router = function () {
                     let v = toMiddle[i];
                     if (ms[v]) {
                         try {
-                            let r = await ms[v](this.app.store.instance, to, from, next);
+                            let r = await ms[v](this.app, to, from, next);
                             if (!r) {
                                 n = false;
                                 break;

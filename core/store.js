@@ -1,7 +1,6 @@
 import ls from './libs/localStorage';
 import Vuex from 'vuex';
 const store = function (modules) {
-    this.name = 'store';
     this.map = {};
     this.whitelist = [];
     this.modules = {};
@@ -20,8 +19,8 @@ const store = function (modules) {
         this.add(key, store);
     };
 
-    this.run = function (vue) {
-        let ds = ls.getItem(this.app.config.storeKey)
+    this.run = function (store_key, debug) {
+        let ds = ls.getItem(store_key)
         Object.keys(this.modules).forEach((i) => {
             if(!this.modulesWhite.includes(i)) {
                 this.modules[i] = this.depModule(this.modules[i], ds && ds[i] ? ds[i] : {});
@@ -29,13 +28,12 @@ const store = function (modules) {
             }
         });
 
-        vue.use(Vuex);
         this.instance = new Vuex.Store({
             modules: this.modules,
-            strict: !this.app.config.debug,
-            plugins: this.app.config.debug ? [
-                this.toLs(this.map, this.writeList)
-            ] : [this.toLs(this.map, this.writeList)]
+            strict: !debug,
+            plugins: debug ? [
+                this.toLs(this.map, this.writeList, store_key)
+            ] : [this.toLs(this.map, this.writeList, store_key)]
         });
         return this.instance;
     };
@@ -52,8 +50,8 @@ const store = function (modules) {
         if (ds) {
             Object.keys(deps.state).forEach(k => {
                 //await to fixed Map、 Set and syblm 
-                if (this.app.utils._.isObject(deps.state[k]) || Array.isArray(deps.state[k])) {
-                    deps.state[k] = this.app.utils._.merge(deps.state[k], ds[k] !== undefined ? ds[k] : {})
+                if (utils.tool.isObject(deps.state[k]) || Array.isArray(deps.state[k])) {
+                    deps.state[k] = utils.tool.bind(deps.state[k], ds[k] !== undefined ? ds[k] : {})
                 }else {
                     deps.state[k] = ds[k] ? ds[k] : '';
                 }
@@ -79,8 +77,8 @@ const store = function (modules) {
         return deps;
     };
 
-    this.toLs = function () {
-        let k = this.app.config.storeKey || 'lsKey';
+    this.toLs = function (key) {
+        let k = key || 'lsKey';
         return store => {
             store.subscribe((mutation, state) => {
                 if (this.whitelist.findIndex(m => m === mutation.type) < 0) {
@@ -101,7 +99,7 @@ const store = function (modules) {
             return state;
         }
 
-        let tmp = this.app.utils._.isObject(map) ? Object.keys(map).filter(v => v != '_modules') : map;
+        let tmp = utils.tool.isObject(map) ? Object.keys(map).filter(v => v != '_modules') : map;
         let d = Object.create(null);
         tmp.forEach(k => { 
             d[k] = state[k] !== undefined ? state[k] : {};

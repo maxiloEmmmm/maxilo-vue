@@ -11,24 +11,28 @@ export const route = function(){
         this.routes.push(...b);
     };
 
-    this.add = (path, component) => {
+    this.add = (path, component, meta = {}, beforeEnter = null) => {
         let params = {
             path,
             component,
-            meta: {}
+            meta,
+            beforeEnter
         };
+
         if(this.middleware.length != 0) {
             params['meta']['middlewares'] = this.middlewares;
             this.middlewares = [];
         }
+
         this.currentIndex = this.routes.push(params);
         return this.mgroup ? this.currentIndex : this;
     };
 
-    this.group = (path, component, callback) => {
+    this.group = (path, component, callback, meta = {}, beforeEnter = null) => {
         let group = {
             path,
-            meta: {}
+            meta,
+            beforeEnter
         };
 
         if(component != '') {
@@ -88,16 +92,19 @@ export const route = function(){
 
 let routeItem = function() {
     this.items = [];
-    this.add = (path, component) => {
+    this.add = (path, component, meta = {}) => {
         this.items.push({
             path,
             component,
+            meta
         });
     };
 
-    this.group = (path, component, callback) => {
+    this.group = (path, component, callback, meta = {}, beforeEnter = null) => {
         let group = {
-            path
+            path,
+            meta,
+            beforeEnter
         };
 
         if(component != '') {

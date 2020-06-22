@@ -110,6 +110,195 @@ let getBroswer = function() {
     return { broswer: "", version: "0" };
 }
 
+const bind = function _bind(struct, data) {
+    let type = Object.prototype.toString.call(struct)
+    if(type == '[object Object]') {
+        let _struct = {}
+        Object.keys(struct).forEach(k => {
+            let hasRelationKey = k.indexOf('->') > -1
+            let sourceK = k
+            let destK = k
+            if(hasRelationKey) {
+                let keys = k.split('->')
+                sourceK = keys[0]
+                destK = keys[1]
+            }
+
+            let stype =  Object.prototype.toString.call(struct[k])
+            let val = data[destK]
+            if(stype == '[object Array]') {
+                let s = struct[k][0]
+                if(Object.prototype.toString.call(val) == '[object Array]') {
+                    let childItems = []
+                    val.forEach(child => {
+                        childItems.push(_bind(s, child))
+                    })
+                    _struct[destK] = childItems
+                }else {
+                    _struct[destK] = []
+                }
+            }else {
+                _struct[destK] = stype == '[object Object]' ? _bind(data, val) : struct[k](val)
+            }
+        })
+
+        return _struct
+    }else {
+        return null
+    }
+}
+
+const cloneDeep = function _cloneDeep(data){
+    let type = Object.prototype.toString.call(data)
+    if (!['[object Array]', '[object Object]'].includes(type)) {
+        return data
+    }else {
+        if(type == '[object Array]') {
+            let items = []
+            data.forEach(item => {
+                items.push(_cloneDeep(item))
+            })
+            return item
+        }else {
+            let obj = {...data}
+            let _obj = {}
+            Object.keys(obj).forEach(k => {
+                _obj[k] = _cloneDeep(obj[k])
+            })
+            return _obj
+        }
+    }
+}
+
+const has = function (
+    obj,
+    path,
+    returnValue = false,
+    endValue = false,
+    failBack = null) {
+    let pathInfo = path.split('.')
+    let x = []
+    let tmp = {}
+    pathInfo.forEach(v => {
+        if (/\[/.test(v)) {
+            //find [a]b[c] | b[a]c | [a][b]c => a.b.c
+            let arrayPathInfo = v.match(/(\[([^\[\]]+?)\]|[^\[\]]+)+?/g)
+            if (arrayPathInfo !== null) {
+                arrayPathInfo.forEach(q => {
+                    x.push(q.replace('[', '').replace(']', ''))
+                })
+            }
+        } else {
+            x.push(v)
+        }
+    })
+    let x_len = x.length
+    for (let i = 0; i < x_len; i++) {
+        let v = x[i]
+        if (!['[object Array]', '[object Object]'].includes(Object.prototype.toString.call(obj))
+            || !(v in obj)) {
+            if (failBack !== null) {
+                failBack(obj, x.slice(i))
+            }
+            return endValue
+        }
+        tmp = obj
+        obj = obj[v]
+    }
+    if (failBack !== null) {
+        failBack(tmp, [x[x_len - 1]])
+    }
+    return returnValue ? obj : true
+}
+
+const get = function (obj, path, d = undefined) {
+    let value = has(obj, path, true, undefined)
+    return value === undefined ? d : value
+}
+
+const set = function (obj, path, d) {
+    has(obj, path, false, false, function (obj, pathInfo) {
+        let p_len = pathInfo.length
+        for (let i = 0; i < p_len; i++) {
+            let v = pathInfo[i]
+            if (i + 1 < p_len) {
+                let tmp = {}
+                obj = obj[v] = tmp
+            } else {
+                obj[v] = d
+            }
+        }
+    })
+}
+
+const resize = function(el, cb, _c) {
+    let iframe = document.createElement('iframe')
+
+    if(_c) {
+        iframe.setAttribute('class', _c)
+    }
+
+    iframe.setAttribute('style', `
+            width: 100%;
+            height: 100 %;
+            position: absolute;
+            visibility: hidden;
+            margin: 0;
+            padding: 0;
+            border: 0;`)
+
+    el.appendChild(iframe)
+
+    let oldWidth = el.offsetWidth
+    let oldHeight = el.offsetHeight
+
+    function sizeChange() {
+        let width = el.offsetWidth
+        let height = el.offsetHeight
+        if (width !== oldWidth || height !== oldHeight) {
+            cb({ width: width, height: height }, { width: oldWidth, height: oldHeight })
+            oldWidth = width
+            oldHeight = height
+        }
+    }
+
+    let timer = 0;
+    iframe.contentWindow.onresize = function () {
+        clearTimeout(timer)
+        timer = setTimeout(sizeChange, 20)
+    };
+}
+
+const notice = function(msg, alert = false){
+    let __color_1 = 'background-image:-webkit-gradient( linear, left top, right top,font-weight:bold;-webkit-background-clip: text;font-size:5em;'
+    let __color_2 = 'color:red'
+    let __color_3 = 'color: green'
+    console.group && console.group("需要注意的: ");
+    console.log('| %c%s', (alert ? __color_3 : __color_2), msg);
+    console.group && console.groupEnd();
+}
+
+const getType = function(o){
+    let str = Object.prototype.toString.call(o);
+    return str.slice(8, str.length-1);
+}
+
+const env = function(ds, d){
+    if (ds === undefined || ds === '') {
+        return d;
+    }
+    return true ? ds : d;
+}
+
+const isArray = Array.isArray
+
+const isString = function(item){
+    return getType(item) === 'String'
+}
+const isObject = function(item){
+    return getType(item) === 'Object'
+}
+
 export default {
     parseURL,
     makeModal,
@@ -117,5 +306,17 @@ export default {
     stopPropagation,
     slotDeepClone,
     getBroswer,
-    getSlot
+    getSlot,
+    resize,
+    get,
+    set,
+    has,
+    cloneDeep,
+    bind,
+    notice,
+    getType,
+    env,
+    isArray,
+    isString,
+    isObject
 }

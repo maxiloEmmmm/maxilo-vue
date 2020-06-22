@@ -1,10 +1,10 @@
 import utilsLib from './utils/index.js';
 
-const utils = function (modules) {
+const utils = function () {
     this.depBind = function(hi){
         let tmp = {}
         Object.keys(hi).forEach(v => {
-            if (utilsLib.base.getType(hi[v]) == 'Object') {
+            if (utilsLib.tool.getType(hi[v]) == 'Object') {
                 this.depBind(hi[v]);
             }else {
                 tmp[v] = function(){
@@ -15,10 +15,6 @@ const utils = function (modules) {
         return tmp;
     }
 
-    utilsLib.diy.alert = this.depBind(utilsLib.diy.alert);
-    utilsLib.async = this.depBind(utilsLib.async);
-
-    this.name = 'utils';
     this.utilMap = utilsLib
 
     Object.keys(this.utilMap).forEach(v => {
@@ -30,7 +26,7 @@ const utils = function (modules) {
     });
 
     this.add = function (namespace, func, bind = false) {
-        if (!this.app.utils._.isString(namespace) || namespace == '') {
+        if (!utilsLib.tool.isString(namespace) || namespace == '') {
             return ;
         }
 

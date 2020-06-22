@@ -1,10 +1,9 @@
 import utils from '../utils/index.js'; 
 const config = function(){
-    this.name = 'config';
     this.cs = {
         debug: true,
         locale: 'zh_cn',
-        baseURL: 'server',
+        baseURL: '/',
         storeKey: 'fuf8u18uhf1huif13uhif2'
     };
 
@@ -40,14 +39,6 @@ const config = function(){
                 this.add(v, obj[v]);
             }else {
                 this.cs[v] = obj[v];
-            }
-        });
-    };
-
-    this.run = function(vue){
-        Object.defineProperty(vue.prototype, '$configs', {
-            get: () => {
-                return this.cs;
             }
         });
     };
