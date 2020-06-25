@@ -1,5 +1,11 @@
 # maxilo-vue
 
+<p align="left">
+  <a href="https://npmcharts.com/compare/vue?minimal=true"><img src="https://img.shields.io/npm/dm/maxilo-vue.svg?sanitize=true" alt="Downloads"></a>
+  <a href="https://www.npmjs.com/package/vue"><img src="https://img.shields.io/npm/v/maxilo-vue.svg?sanitize=true" alt="Version"></a>
+  <a href="https://www.npmjs.com/package/vue"><img src="https://img.shields.io/npm/l/maxilo-vue.svg?sanitize=true" alt="License"></a>
+</p>
+
 ## 文档
 
 ### 例子
@@ -26,9 +32,9 @@ https://github.com/maxiloEmmmm/maxilo-vue/tree/master/example/quickstart
             r.group("path2", (rr) => {
                 return [
                     // /path/path2/path
-                    r.add("path", "component"),
+                    rr.add("path", "component"),
                     // /path/path2/path1
-                    r.add("path1", "component"),
+                    rr.add("path1", "component"),
                 ]
             })
         ]
