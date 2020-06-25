@@ -92,11 +92,12 @@ export const route = function(){
 
 let routeItem = function() {
     this.items = [];
-    this.add = (path, component, meta = {}) => {
+    this.add = (path, component, meta = {}, beforeEnter = null) => {
         this.items.push({
             path,
             component,
-            meta
+            meta,
+            beforeEnter
         });
     };
 
