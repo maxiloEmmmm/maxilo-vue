@@ -23,5 +23,7 @@ export default function(){
                 };
             },
         });
+
+        app.addHook('i18n', app.make("i18n"))
     }
 }

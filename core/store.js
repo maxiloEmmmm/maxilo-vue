@@ -1,6 +1,7 @@
 import ls from './libs/localStorage';
 import Vuex from 'vuex';
-const store = function (modules) {
+import utils from './utils/index.js'
+const store = function () {
     this.map = {};
     this.whitelist = [];
     this.modules = {};
@@ -32,8 +33,8 @@ const store = function (modules) {
             modules: this.modules,
             strict: !debug,
             plugins: debug ? [
-                this.toLs(this.map, this.writeList, store_key)
-            ] : [this.toLs(this.map, this.writeList, store_key)]
+                this.toLs(store_key)
+            ] : [this.toLs(store_key)]
         });
         return this.instance;
     };
