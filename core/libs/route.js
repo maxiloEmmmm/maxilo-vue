@@ -55,7 +55,7 @@ export const route = function(){
 
     this.middleware = (ms) => {
         this.middlewares = [];
-        if(utils._.isString(ms)) {
+        if(utils.tool.isString(ms)) {
             ms = [ms];
         }
 
@@ -65,7 +65,7 @@ export const route = function(){
 
     this.middlewareGroup = (ms, rs) => {
         this.mgroup = true;
-        if(utils._.isString(ms)) {
+        if(utils.tool.isString(ms)) {
             ms = [ms];
         }
         let r = rs();
@@ -79,7 +79,7 @@ export const route = function(){
     this.addMiddleware = (ms) => {
         if(this.currentIndex == 0) {return; }
 
-        if(utils._.isString(ms)) {
+        if(utils.tool.isString(ms)) {
             ms = [ms];
         }
 
