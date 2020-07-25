@@ -27,7 +27,7 @@ const router = function () {
 
         r.beforeEach(async (to, from, next) => {
             let globalMs = this.middleware.globalItems;
-            let ms = utils.tool.bind({}, globalMs, this.middleware.items);
+            let ms = Object.assign({}, globalMs, this.middleware.items);
             let toMiddle = [...Object.keys(globalMs)];
             to.matched.forEach((v) => {
                 if (v.meta.middlewares && v.meta.middlewares != 0) {
