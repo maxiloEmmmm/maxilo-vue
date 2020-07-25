@@ -1,6 +1,6 @@
 {
   "name": "maxilo-vue",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "maxilo web framework.",
   "main": "dist/main.min.js",
   "scripts": {
