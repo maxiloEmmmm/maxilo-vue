@@ -9,6 +9,6 @@ export default function(){
 
     this.boot = function(app){
         app.vue.use(VueRouter)
-        app.addHook('router', app.make("router").run())
+        app.addHook('router', app.make("router").run(app))
     }
 }
