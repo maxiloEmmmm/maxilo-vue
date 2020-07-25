@@ -18,7 +18,7 @@ const router = function () {
         return this.instance.routes;
     };
 
-    this.run = function(){
+    this.run = function(app){
         let r = new VueRouter({
             mode: this.mode,
             linkActiveClass: 'active',
@@ -42,7 +42,7 @@ const router = function () {
                     let v = toMiddle[i];
                     if (ms[v]) {
                         try {
-                            let r = await ms[v](this.app, to, from, next);
+                            let r = await ms[v](app, to, from, next);
                             if (!r) {
                                 n = false;
                                 break;
