@@ -1,6 +1,6 @@
 {
   "name": "maxilo-vue",
-  "version": "3.0.5",
+  "version": "3.0.6",
   "description": "maxilo web framework.",
   "main": "dist/main.min.js",
   "scripts": {
@@ -36,12 +36,13 @@
     "rollup-plugin-uglify": "^6.0.4"
   },
   "dependencies": {
-    "vee-validate": "^2.0.5",
+    "axios": "^0.18.0",
+    "rollup": "^2.23.0",
+    "vee-validate": "^3.3.8",
     "vue": "^2.5.16",
     "vue-i18n": "^7.6.0",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1",
-    "axios": "^0.18.0"
+    "vuex": "^3.0.1"
   },
   "_from": "maxilo-vue@1.0.5",
   "_resolved": "http://registry.npm.taobao.org/maxilo-vue/download/maxilo-vue-1.0.5.tgz"

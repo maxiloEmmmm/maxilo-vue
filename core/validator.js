@@ -1,4 +1,4 @@
-import VeeValidate, {Validator} from 'vee-validate';
+import {localize, extend, ValidationProvider} from 'vee-validate'
 import utils from "./utils/index"
 const validator = function () {
     this.name = 'validator';
@@ -16,8 +16,8 @@ const validator = function () {
                 return ;
             }
 
-            if (!v.getMessage) {
-                v.getMessage = (v, args) => key + ' Error.';
+            if (!v.message) {
+                v.message = '{_field_} Error.';
             }
 
             this.rules[key] = v;
@@ -47,17 +47,13 @@ const validator = function () {
     };
 
     this.run = function (app) {
-        Object.keys(this.rules).forEach(k => Validator.extend(k, this.rules[k]));
-        Object.keys(this.messages).forEach(k => Validator.localize(k, {
+        Object.keys(this.rules).forEach(k => extend(k, this.rules[k]));
+        Object.keys(this.messages).forEach(k => localize(k, {
             name: k,
             messages: this.messages[k]
         }));
-
-        let localize = VeeValidate.Validator 
-            ? Validator.localize
-            : VeeValidate.localize
+        app.make("vue").component('ValidationProvider', ValidationProvider)
         localize(app.make("config").locale)
-        app.vue.use(VeeValidate);
     };
 };
 export default validator;

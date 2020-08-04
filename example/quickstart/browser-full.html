@@ -13,8 +13,35 @@
     <script src="../../dist/maxilo-vue.min.js"></script>
     <script>
         maxiloVue.make("vue").component('hi', {
+            data(){
+                return {value: ''}
+            },
             render: function (h) {
-                return h('p', 'Quick start')
+                var self = this
+                return h("div", [
+                h('p', 'Quick start'),
+                h('ValidationProvider', {
+                    props: {
+                        rules: 'ha',
+                    },
+                    scopedSlots: {
+                        default: props => [
+                            h("input", {
+                                domProps: {
+                                    value: self.value
+                                },
+                                attrs: {name: "hello"},
+                                on: {
+                                    input: function (event) {
+                                        self.value = event.target.value
+                                    }
+                                }           
+                            }),
+                            h('span', props.errors[0])
+                        ]
+                    },
+                })
+                ])
             }
         })
         maxiloVue.make("router").getRoute().add('/', {
@@ -22,6 +49,12 @@
                 return h('div', [h('span', 'Hi'), h('hi')])
             }
         })
+        maxiloVue.make("validator").addRule("ha", {
+            validate: value => {
+                return value > 1
+            }
+        })
+        maxiloVue.make("config").add("debug", true)
         maxiloVue.run()
     </script>
 </body>
