@@ -3,10 +3,10 @@ import resolve from 'rollup-plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import flow from 'rollup-plugin-flow-no-whitespace';
 import babel from 'rollup-plugin-babel';
-import {uglify} from 'rollup-plugin-uglify';
+// import {uglify} from 'rollup-plugin-uglify';
 import replace from 'rollup-plugin-replace';
 
-const ext = ['vee-validate', 'vue', 'vue-i18n', 'vue-router', 'vuex', 'axios']
+const ext = ['vue', 'vue-i18n', 'vue-router', 'vuex', 'axios']
 const out_ext = ['vue', 'vue-i18n', 'vue-router', 'vuex']
 export default {
     input: {
@@ -31,7 +31,7 @@ export default {
     }), commonjs(), babel({
         exclude: 'node_modules/**',
         runtimeHelpers: true
-    }), uglify(), replace({
+    }), replace({
       'process.env.NODE_ENV': JSON.stringify('production')
     })],
 }
