@@ -7,46 +7,6 @@ let parseURL = function (url) {
     return tmp;
 };
 
-let makeModal = (t, style) => {
-    let target = random('__init_modal');
-    let d = t ? t : document.body;
-    let dom = d.appendChild(document.createElement('div'));
-    dom.id = target;
-    dom.className = 'init';
-    dom.innerHTML = `<style>.init {position: fixed;
-    width: 100%;
-    height: 100%;
-    /* top: 50%; */
-    right: 0;
-    bottom: 0;
-    left: 0;
-    margin: auto;
-    opacity: ${style == 1 ? 1 : 0.8};
-    background: #cecece;
-    z-index: 100000;}</style>` + (style == 1 ? `<div class="sk-spinner sk-spinner-wave" style="margin-top:35%">
-				<div class="sk-rect1"></div>
-                <div class="sk-rect2"></div>
-                <div class="sk-rect3"></div>
-                <div class="sk-rect4"></div>
-				<div class="sk-rect5"></div>
-			
-	</div>` : `<div class="sk-spinner sk-spinner-fading-circle" style="margin-top:35%">
-		<div class="sk-circle1 sk-circle"></div>
-		<div class="sk-circle2 sk-circle"></div>
-		<div class="sk-circle3 sk-circle"></div>
-		<div class="sk-circle4 sk-circle"></div>
-		<div class="sk-circle5 sk-circle"></div>
-		<div class="sk-circle6 sk-circle"></div>
-		<div class="sk-circle7 sk-circle"></div>
-		<div class="sk-circle8 sk-circle"></div>
-		<div class="sk-circle9 sk-circle"></div>
-		<div class="sk-circle10 sk-circle"></div>
-		<div class="sk-circle11 sk-circle"></div>
-		<div class="sk-circle12 sk-circle"></div>
-	</div>`);
-    return target;
-};
-
 let random = function (pre = '') {
     function S4() {
         return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
@@ -59,33 +19,6 @@ let random = function (pre = '') {
 
 let stopPropagation = function(e){
     window.event ? window.event.cancelBubble = true : e.stopPropagation();
-};
-
-let slotDeepClone = (vnodes, createElement) => {
-    function cloneVNode(vnode) {
-        const clonedChildren = vnode.children && vnode.children.map(vnode => cloneVNode(vnode));
-        const cloned = createElement(vnode.tag, vnode.data, clonedChildren);
-        cloned.text = vnode.text;
-        cloned.isComment = vnode.isComment;
-        cloned.componentOptions = vnode.componentOptions;
-        cloned.elm = vnode.elm;
-        cloned.context = vnode.context;
-        cloned.ns = vnode.ns;
-        cloned.isStatic = vnode.isStatic;
-        cloned.key = vnode.key;
-
-        return cloned;
-    }
-    if (!vnodes) {return [];}
-    const clonedVNodes = vnodes.map(vnode => cloneVNode(vnode));
-    return clonedVNodes;
-};
-
-let getSlot = function(target, i, clone = false){
-    if (target === undefined || !Array.isArray(target)) { return '' }
-    let s = target.filter(v => v.tag)[i];
-    if (!s) { return ''; }
-    return clone ? slotDeepClone([s], clone)[0] : s;
 };
 
 let getBroswer = function() {
@@ -211,9 +144,9 @@ const has = function (
     return returnValue ? obj : true
 }
 
-const get = function (obj, path, d = undefined) {
-    let value = has(obj, path, true, undefined)
-    return value === undefined ? d : value
+const get = function (obj, path, d = null) {
+    let value = has(obj, path, true, null)
+    return value === null ? d : value
 }
 
 const set = function (obj, path, d) {
@@ -269,15 +202,6 @@ const resize = function(el, cb, _c) {
     };
 }
 
-const notice = function(msg, alert = false){
-    let __color_1 = 'background-image:-webkit-gradient( linear, left top, right top,font-weight:bold;-webkit-background-clip: text;font-size:5em;'
-    let __color_2 = 'color:red'
-    let __color_3 = 'color: green'
-    console.group && console.group("需要注意的: ");
-    console.log('| %c%s', (alert ? __color_3 : __color_2), msg);
-    console.group && console.groupEnd();
-}
-
 const getType = function(o){
     let str = Object.prototype.toString.call(o);
     return str.slice(8, str.length-1);
@@ -299,24 +223,89 @@ const isObject = function(item){
     return getType(item) === 'Object'
 }
 
+const getRender = (d, context, options = d) => {
+    return typeof(context) == "function" ? context.call(d, options) : context
+}
+
+const byte2Size = (bytes) => {
+    if (bytes === 0) return '0 B';
+    let k = 1024;
+    let sizes = ['B','KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    let i = Math.floor(Math.log(bytes) / Math.log(k));
+    i = Object.is(Infinity, i) || Object.is(-Infinity, i) ? 0 : i
+    let num = bytes / Math.pow(k, i);
+    return num.toPrecision(3) + ' ' + sizes[i];
+}
+
+const subQuery = (url, qs) => {
+    if(!url) {
+        return ''
+    }
+    let urlTarget = url.split("#")
+    let urlInfo = urlTarget[0].split("?")
+    let path = urlInfo[0], query = urlInfo[1]
+    let querys = parseURL(query)
+    querys = Object.assign({}, ...querys, ...qs)
+    return path + "?" + Object.keys(querys).map(query => `${query}=${querys[query]}`).join("&") + (urlTarget[1] ? `#${urlTarget[1]}` : "")
+}
+
+const limitAction = function(time, cb) {
+    let ok = true
+    return function() {
+        if(ok) {
+            ok = false
+            setTimeout(() => {
+                ok = true
+            }, time * 1000)
+            cb.call(this)
+        }
+    }
+}
+
+const makeKey = (arr, k) => {
+    let m = {};
+    Array.isArray(arr) && arr.forEach((item) => {
+        m[item[k]] = item
+    })
+    return m
+}
+
+const keyBy = (arr, k) => {
+    let m = {};
+    Array.isArray(arr) && arr.forEach((item) => {
+        if(m[item[k]] === undefined) {
+            m[item[k]] = [item]
+        }else {
+            m[item[k]].push(item)
+        }
+    })
+    return m
+}
+
+const MapMap = (obj, cb) => {
+    return Object.keys(obj).map(k => cb(obj[k], k))
+}
 export default {
     parseURL,
-    makeModal,
     random,
     stopPropagation,
-    slotDeepClone,
     getBroswer,
-    getSlot,
     resize,
     get,
     set,
     has,
     cloneDeep,
     bind,
-    notice,
     getType,
     env,
     isArray,
     isString,
-    isObject
+    isObject,
+    getRender,
+    byte2Size,
+    subQuery,
+    limitAction,
+    makeKey,
+    keyBy,
+    MapMap
 }

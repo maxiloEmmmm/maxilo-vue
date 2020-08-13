@@ -53,3 +53,140 @@ https://github.com/maxiloEmmmm/maxilo-vue/tree/master/example/quickstart
         ]
     })
 ```
+
+### DI
+```javascript
+import maxiloVue from "maxilo-vue"
+maxiloVue.register({
+    register(app){
+        app.bind("x", function(app, args){
+            //return instance
+            return args
+        })
+    },
+    boot: function(app){
+        // 启动部分 如果需要初始化就放这
+        console.log("x boot")
+    }
+})
+
+// maxiloVue.make || this.$app.make
+// 单例
+console.log(maxiloVue.make("x", [1,2,3]))
+
+maxiloVue.register({
+    register(app){
+        app.bind("r", function(app){
+            //return instance
+            return Math.random()
+        })
+    },
+    boot: function(app){
+        // 启动部分
+        console.log("r boot")
+    }
+})
+// maxiloVue.one || this.$app.one
+// 非单例
+console.log(maxiloVue.one("r"))
+
+// 默认加载
+// config http i18n store utils validator vue
+// https://github.com/maxiloEmmmm/maxilo-vue/tree/master/core/*ServiceProvider.js
+
+```
+
+### store
+```javascript
+const state = {
+    server: ""
+}
+
+const mutations = {
+    setCurrentServer(state, payload){
+        state.server = payload
+    }
+}
+
+import maxiloVue from "maxilo-vue"
+// 自动存储和读取localstorage
+maxiloVue.make("store").add('server', {
+    state,
+    mutations,
+    namespaced: true,
+})
+
+this.$store.commit("server/setCurrentServer", key)
+
+// 一次性 刷新数据消失
+maxiloVue.make("store").once('server', {
+    state,
+    mutations,
+    namespaced: true,
+})
+```
+
+### utils
+```javascript
+utils.add("x", () => {
+    console.log("x")
+})
+this.$utils.x()
+
+utils.add("q.p", () => {
+    console.log("q.p")
+})
+this.$utils.q.p()
+
+// 绑定this
+utils.add("b", function() {
+    console.log(this.app.make("x", [1,2,3]))
+}, true)
+this.$utils.b()
+```
+
+### validate
+```javascript
+import maxiloVue from "maxilo-vue"
+const validator = maxiloVue.make("validator")
+import { required } from 'vee-validate/dist/rules';
+
+maxiloVue.register({
+    boot: function(app){
+        validator.addRule('configOk', {
+            validate: async config => {
+                try {
+                    await app.make("http").post("/validate/config", {payload: {config}})
+                    return true
+                } catch (error) {
+                    return error
+                }
+            },
+            message: "compose配置有误"
+        })
+        validator.addRule("required", {
+            ...required,
+            message: "必填不可为空!"
+        })
+        
+        validator.addRule("abc", {
+            validate(value){
+                return /^[a-zA-Z0-9-_]+$/.test(value)
+            },
+            message: "只可以为大小写字母数字和-_"
+        })
+    }
+})
+```
+
+### config
+```javascript
+// 添加 | 覆盖
+config.add("baseURL", process.env.VUE_APP_BASEURL ? process.env.VUE_APP_BASEURL : "http://localhost:8000")
+console.log(this.$configs.baseURL)
+
+//baseURL 用于axios
+//debug 调试模式
+//locale 语种
+//storeKey store存储localstorage key
+```

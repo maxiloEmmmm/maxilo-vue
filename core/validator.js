@@ -1,4 +1,4 @@
-import {localize, extend, ValidationProvider} from 'vee-validate'
+import {localize, extend, ValidationProvider, ValidationObserver } from 'vee-validate'
 import utils from "./utils/index"
 const validator = function () {
     this.name = 'validator';
@@ -53,6 +53,7 @@ const validator = function () {
             messages: this.messages[k]
         }));
         app.make("vue").component('ValidationProvider', ValidationProvider)
+        app.make("vue").component('ValidationObserver', ValidationObserver)
         localize(app.make("config").locale)
     };
 };
