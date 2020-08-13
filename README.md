@@ -152,7 +152,8 @@ const validator = maxiloVue.make("validator")
 import { required } from 'vee-validate/dist/rules';
 
 maxiloVue.register({
-    boot: function(app){
+    // 在注册阶段注册 boot阶段无效
+    register: function(app){
         validator.addRule('configOk', {
             validate: async config => {
                 try {
