@@ -9,7 +9,7 @@ export default function(app) {
     this.register = function(provider) {
         this.providers.push(provider);
 
-        provider.register(this.app)
+        provider.register && provider.register(this.app)
 
         if (this.booted) {
             provider.boot(this.app);
@@ -20,7 +20,9 @@ export default function(app) {
         if(this.booted) {return ;}
 
         for(let i = 0; i < this.providers.length; i++) {
-            await this.providers[i].boot(this.app)
+            if(this.providers[i].boot) {
+                await this.providers[i].boot(this.app)
+            }
         }
 
         this.booted = true;
