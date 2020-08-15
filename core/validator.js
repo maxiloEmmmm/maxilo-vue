@@ -21,6 +21,7 @@ const validator = function () {
             }
 
             this.rules[key] = v;
+            extend(key, v)
         }
     };
 
@@ -47,7 +48,6 @@ const validator = function () {
     };
 
     this.run = function (app) {
-        Object.keys(this.rules).forEach(k => extend(k, this.rules[k]));
         Object.keys(this.messages).forEach(k => localize(k, {
             name: k,
             messages: this.messages[k]

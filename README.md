@@ -23,21 +23,20 @@ https://github.com/maxiloEmmmm/maxilo-vue/tree/master/example/quickstart
 
     // 添加嵌套路由 /path
     router.group("path", "component", (r) => {
-        return [
-            // /path/path
-            r.add("path", "component"),
-            // /path/path1
-            r.add("path1", "component"),
-            // /path/path2
-            r.group("path2", (rr) => {
-                return [
-                    // /path/path2/path
-                    rr.add("path", "component"),
-                    // /path/path2/path1
-                    rr.add("path1", "component"),
-                ]
-            })
-        ]
+        // 需要使用入参而不是外部router
+        // /path/path
+        r.add("path", "component"),
+        // /path/path1
+        r.add("path1", "component"),
+        // /path/path2
+        r.group("path2", (rr) => {
+            return [
+                // /path/path2/path
+                rr.add("path", "component"),
+                // /path/path2/path1
+                rr.add("path1", "component"),
+            ]
+        })
     })
 
     // 添加中间件
