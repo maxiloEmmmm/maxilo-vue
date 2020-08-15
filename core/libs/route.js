@@ -39,6 +39,8 @@ export const route = function(){
 
         if(component != '') {
             group.component = component;
+        }else {
+            component = <route-view></route-view>
         }
 
         if(this.middleware.length != 0) {
