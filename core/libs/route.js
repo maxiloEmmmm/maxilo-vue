@@ -42,7 +42,7 @@ export const route = function(){
         }else {
             group.component = {
                 render(){
-                    return <route-view></route-view>
+                    return <router-view></router-view>
                 }
             }
         }
