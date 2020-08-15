@@ -40,7 +40,11 @@ export const route = function(){
         if(component != '') {
             group.component = component;
         }else {
-            group.component = <route-view></route-view>
+            group.component = {
+                render(){
+                    return <route-view></route-view>
+                }
+            }
         }
 
         if(this.middleware.length != 0) {
