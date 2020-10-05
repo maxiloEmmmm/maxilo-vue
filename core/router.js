@@ -7,25 +7,25 @@ const router = function () {
     this.mode = 'hash'
 
     this.getRoute = function () {
-        if(!this.instance) {
-            this.instance = new routeLib;
+        if(!this.lib) {
+            this.lib = new routeLib;
         }
         
-        return this.instance;
+        return this.lib;
     };
 
     this.getRoutes = function () {
-        return this.instance.routes;
+        return this.lib.routes;
     };
 
     this.run = function(app){
-        let r = new VueRouter({
+        this.instance = new VueRouter({
             mode: this.mode,
             linkActiveClass: 'active',
-            routes: this.instance ? this.instance.routes : []
+            routes: this.lib ? this.lib.routes : []
         });
 
-        r.beforeEach(async (to, from, next) => {
+        this.instance.beforeEach(async (to, from, next) => {
             let globalMs = this.middleware.globalItems;
             let ms = Object.assign({}, globalMs, this.middleware.items);
             let toMiddle = [...Object.keys(globalMs)];
@@ -57,7 +57,7 @@ const router = function () {
             } else { next(); }
         });
 
-        return r;
+        return this.instance;
     };
 };
 

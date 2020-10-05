@@ -50,7 +50,15 @@ const utils = function () {
             });
             return ;
         }
+        let getKeys = Object.keys(this.utilMap)
         this.depNameSpace(this.utilMap, tmp, func, bind);
+        if(!getKeys.includes(tmp[0])) {
+            Object.defineProperty(this, tmp[0], {
+                get: () => {
+                    return this.utilMap[tmp[0]]
+                }
+            });
+        }
     };
 
     this.run = function (vue) {
