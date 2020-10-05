@@ -285,6 +285,15 @@ const keyBy = (arr, k) => {
 const MapMap = (obj, cb) => {
     return Object.keys(obj).map(k => cb(obj[k], k))
 }
+
+const numberFloat = (v, d = 0) => {
+    return parseFloat(selfNumber(v).toFixed(d))
+}
+
+const selfNumber = (value) => {
+    return value === undefined || isNaN(value) ? 0 : Number(value)
+}
+
 export default {
     parseURL,
     random,
@@ -307,5 +316,7 @@ export default {
     limitAction,
     makeKey,
     keyBy,
-    MapMap
+    MapMap,
+    float: numberFloat,
+    number: selfNumber
 }
