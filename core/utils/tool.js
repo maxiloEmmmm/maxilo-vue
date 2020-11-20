@@ -71,7 +71,7 @@ const bind = function _bind(struct, data) {
                     _struct[destK] = []
                 }
             }else {
-                _struct[destK] = stype == '[object Object]' ? _bind(data, val) : struct[k](val)
+                _struct[destK] = stype == '[object Object]' ? _bind(struct[k], val) : struct[k](val)
             }
         })
 
