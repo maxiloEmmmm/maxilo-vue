@@ -39,7 +39,7 @@
     "rollup-plugin-vue2": "^0.8.1"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "rollup": "^2.23.0",
     "vee-validate": "^3.3.8",
     "vue": "^2.5.16",
